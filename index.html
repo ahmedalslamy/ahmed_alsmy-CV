@@ -14,53 +14,26 @@
     --text:#e2e8f0;
     --accent:#06b6d4;
   }
-
   body{
     font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
     margin:0;
     padding:0;
     line-height:1.6;
     direction:rtl;
-    color:var(--text);
-    overflow-x:hidden;
-    background: linear-gradient(-45deg, #0f172a, #1e293b, #0f172a, #1e293b);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    position: relative;
   }
-
-  @keyframes gradientBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
-
-  /* Particles canvas */
-  #particles {
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    z-index:0;
-  }
-
   .container{
     max-width:800px;
     margin:auto;
     padding:15px;
-    position:relative;
-    z-index:1;
   }
-
   .card{
     background:var(--card);
     padding:15px;
     border-radius:16px;
     margin-bottom:20px;
   }
-
   h1,h2,h3{margin-top:0;color:var(--accent);}
   .btn{
     display:inline-block;
@@ -72,14 +45,14 @@
     font-weight:600;
     transition:background .3s;
   }
-  .btn:hover{background:#0891b2;}
-
+  .btn:hover{
+    background:#0891b2;
+  }
   .works{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
     gap:10px;
   }
-
   .work-item{
     background:#0f172a;
     border-radius:12px;
@@ -95,7 +68,6 @@
     object-fit:cover;
     display:block;
   }
-
   .footer{text-align:center;margin:30px 0 10px;color:#94a3b8;font-size:14px;}
 
   /* Lightbox */
@@ -133,136 +105,118 @@
 </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
-
-<div class="container">
-  <!-- البطاقة الشخصية -->
-  <div class="card" style="display:flex;align-items:center;gap:12px;">
-    <img src="https://i.ibb.co/0VWQv8F1/your-photo.jpg" alt="أحمد السلامي" style="width:70px;height:70px;border-radius:50%;object-fit:cover;">
-    <div>
-      <h2>أحمد محمد ناصر قائد السلامي</h2>
-      <p>مصمم ومسوق إلكتروني بخبرة عملية في التصميم والطباعة وإدارة الحملات الإعلانية</p>
-      <p>صفحة شخصية — عرض أعمال ووسائل التواصل</p>
+  <div class="container">
+    <!-- البطاقة الشخصية -->
+    <div class="card" style="display:flex;align-items:center;gap:12px;">
+      <img src="https://i.ibb.co/0VWQv8F1/your-photo.jpg" alt="أحمد السلامي" style="width:70px;height:70px;border-radius:50%;object-fit:cover;">
+      <div>
+        <h2>أحمد محمد ناصر قائد السلامي</h2>
+        <p>مصمم ومسوق إلكتروني بخبرة عملية في التصميم والطباعة وإدارة الحملات الإعلانية</p>
+        <p>صفحة شخصية — عرض أعمال ووسائل التواصل</p>
+      </div>
     </div>
-  </div>
 
-  <!-- من أنا -->
-  <div class="card">
-    <h3>من أنا</h3>
-    <p>أنا أحمد محمد السلامي، مصمم ومشغل طباعة بخبرة تتجاوز خمس سنوات في التصميم، الطباعة، والتسويق الإلكتروني.  
-    عملت على تنفيذ تصاميم مخصصة، تجهيز ملفات الطباعة، وضبط إعدادات الإنتاج بدقة عالية، إضافةً إلى إدارة الحملات التسويقية وتحسين أداء المتاجر الإلكترونية.</p>
-  </div>
-
-  <!-- أعمال التصميم الإعلاني -->
-  <div class="card">
-    <h3>أعمال التصميم الإعلاني</h3>
-    <div class="works">
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/150989889.png" alt="عمل 1"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/516060985.png" alt="عمل 2"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/897949365.jpg" alt="عمل 3"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/958474529.png" alt="عمل 4"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/676674290.jpg" alt="عمل 5"></div>
-      <!-- أضف بقية الصور كما في الكود السابق -->
+    <!-- من أنا -->
+    <div class="card">
+      <h3>من أنا</h3>
+      <p>أنا أحمد محمد السلامي، مصمم ومشغل طباعة بخبرة تتجاوز خمس سنوات في التصميم، الطباعة، والتسويق الإلكتروني.  
+      عملت على تنفيذ تصاميم مخصصة، تجهيز ملفات الطباعة، وضبط إعدادات الإنتاج بدقة عالية، إضافةً إلى إدارة الحملات التسويقية وتحسين أداء المتاجر الإلكترونية.</p>
     </div>
-  </div>
 
-  <!-- أداء الحملات الإعلانية -->
-  <div class="card">
-    <h3>أداء الحملات الإعلانية</h3>
-    <div class="works">
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/770212450.jpg" alt="حملة 1"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/611077070.jpg" alt="حملة 2"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/463064977.jpg" alt="حملة 3"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/678904030.jpg" alt="حملة 4"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/517068052.jpg" alt="حملة 5"></div>
+    <!-- أعمال التصميم الإعلاني -->
+    <div class="card">
+      <h3>أعمال التصميم الإعلاني</h3>
+      <div class="works">
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/150989889.png" alt="عمل 1"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/516060985.png" alt="عمل 2"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/897949365.jpg" alt="عمل 3"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/958474529.png" alt="عمل 4"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/676674290.jpg" alt="عمل 5"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/161186280.jpg" alt="عمل 6"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/677640302.jpg" alt="عمل 7"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/445348193.jpg" alt="عمل 8"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/227917876.jpg" alt="عمل 9"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/486232761.jpg" alt="عمل 10"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/919427492.jpg" alt="عمل 11"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/313847758.jpg" alt="عمل 12"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/165424954.jpg" alt="عمل 13"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/707470323.jpg" alt="عمل 14"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/671461575.jpg" alt="عمل 15"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/501569540.jpg" alt="عمل 16"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/324125662.jpg" alt="عمل 17"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/608042838.jpg" alt="عمل 18"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/478768167.jpg" alt="عمل 19"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/844475424.jpg" alt="عمل 20"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/555208759.jpg" alt="عمل 21"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/493984826.jpg" alt="عمل 22"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/136128293.jpg" alt="عمل 23"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/588394631.png" alt="عمل 24"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/654231919.jpg" alt="عمل 25"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/183279854.png" alt="عمل 26"></div>
+      </div>
     </div>
+
+    <!-- أداء الحملات الإعلانية -->
+    <div class="card">
+      <h3>أداء الحملات الإعلانية</h3>
+      <div class="works">
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/770212450.jpg" alt="حملة 1"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/611077070.jpg" alt="حملة 2"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/463064977.jpg" alt="حملة 3"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/678904030.jpg" alt="حملة 4"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/517068052.jpg" alt="حملة 5"></div>
+      </div>
+    </div>
+
+    <!-- التواصل -->
+    <div class="card" style="text-align:center;">
+      <h3>التواصل</h3>
+      <p>واتساب: <strong>+966509067209</strong></p>
+      <p>بريد إلكتروني: <strong>ahmed.m.alslamy@gmail.com</strong></p>
+      <a class="btn" href="https://wa.me/966509067209?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%D9%83%D9%85">تواصل عبر واتساب</a>
+    </div>
+
+    <div class="footer">© 2025 أحمد السلامي</div>
   </div>
 
-  <!-- التواصل -->
-  <div class="card" style="text-align:center;">
-    <h3>التواصل</h3>
-    <p>واتساب: <strong>+966509067209</strong></p>
-    <p>بريد إلكتروني: <strong>ahmed.m.alslamy@gmail.com</strong></p>
-    <a class="btn" href="https://wa.me/966509067209?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%D9%83%D9%85">تواصل عبر واتساب</a>
+  <!-- Lightbox تفاعلي -->
+  <div class="lightbox" id="lightbox">
+    <button class="prev">&#10094;</button>
+    <img src="" alt="صورة مكبرة">
+    <button class="next">&#10095;</button>
   </div>
 
-  <div class="footer">© 2025 أحمد السلامي</div>
-</div>
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    const images = Array.from(document.querySelectorAll('.work-item img'));
+    let currentIndex = 0;
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox">
-  <button class="prev">&#10094;</button>
-  <img src="" alt="صورة مكبرة">
-  <button class="next">&#10095;</button>
-</div>
+    // فتح الصورة عند الضغط
+    images.forEach((img, index)=>{
+      img.addEventListener('click', ()=>{
+        currentIndex = index;
+        lightboxImg.src = images[currentIndex].src;
+        lightbox.classList.add('show');
+      });
+    });
 
-<script>
-  // Lightbox
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = lightbox.querySelector('img');
-  const images = Array.from(document.querySelectorAll('.work-item img'));
-  let currentIndex = 0;
-
-  images.forEach((img, index)=>{
-    img.addEventListener('click', ()=>{
-      currentIndex = index;
+    // التنقل لليمين واليسار
+    lightbox.querySelector('.next').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % images.length;
       lightboxImg.src = images[currentIndex].src;
-      lightbox.classList.add('show');
     });
-  });
-
-  lightbox.querySelector('.next').addEventListener('click', (e)=>{
-    e.stopPropagation();
-    currentIndex = (currentIndex + 1) % images.length;
-    lightboxImg.src = images[currentIndex].src;
-  });
-  lightbox.querySelector('.prev').addEventListener('click', (e)=>{
-    e.stopPropagation();
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    lightboxImg.src = images[currentIndex].src;
-  });
-
-  lightbox.addEventListener('click', ()=>{
-    lightbox.classList.remove('show');
-  });
-
-  // Particles
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
-  let w = canvas.width = window.innerWidth;
-  let h = canvas.height = window.innerHeight;
-
-  const particles = [];
-  for(let i=0;i<80;i++){
-    particles.push({
-      x: Math.random()*w,
-      y: Math.random()*h,
-      r: Math.random()*2+1,
-      dx: (Math.random()-0.5)*0.5,
-      dy: (Math.random()-0.5)*0.5
+    lightbox.querySelector('.prev').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      lightboxImg.src = images[currentIndex].src;
     });
-  }
 
-  function animate(){
-    ctx.clearRect(0,0,w,h);
-    particles.forEach(p=>{
-      p.x += p.dx;
-      p.y += p.dy;
-      if(p.x<0||p.x>w) p.dx*=-1;
-      if(p.y<0||p.y>h) p.dy*=-1;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,0.05)';
-      ctx.fill();
+    // إغلاق عند الضغط في الخلفية
+    lightbox.addEventListener('click', ()=>{
+      lightbox.classList.remove('show');
     });
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  window.addEventListener('resize', ()=>{
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  });
-</script>
+  </script>
 </body>
 </html>
