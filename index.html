@@ -88,6 +88,20 @@
     box-shadow:0 0 25px rgba(0,0,0,0.5);
   }
   .lightbox.show{display:flex;}
+  .lightbox button{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:40px;
+    color:white;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:10px;
+    user-select:none;
+  }
+  .lightbox .prev{left:20px;}
+  .lightbox .next{right:20px;}
 </style>
 </head>
 <body>
@@ -160,21 +174,44 @@
     <div class="footer">© 2025 أحمد السلامي</div>
   </div>
 
-  <!-- Lightbox -->
+  <!-- Lightbox تفاعلي -->
   <div class="lightbox" id="lightbox">
+    <button class="prev">&#10094;</button>
     <img src="" alt="صورة مكبرة">
+    <button class="next">&#10095;</button>
   </div>
 
   <script>
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = lightbox.querySelector('img');
-    document.querySelectorAll('.work-item img').forEach(img=>{
-      img.addEventListener('click',()=>{
-        lightboxImg.src = img.src;
+    const images = Array.from(document.querySelectorAll('.work-item img'));
+    let currentIndex = 0;
+
+    // فتح الصورة عند الضغط
+    images.forEach((img, index)=>{
+      img.addEventListener('click', ()=>{
+        currentIndex = index;
+        lightboxImg.src = images[currentIndex].src;
         lightbox.classList.add('show');
       });
     });
-    lightbox.addEventListener('click',()=>lightbox.classList.remove('show'));
+
+    // التنقل لليمين واليسار
+    lightbox.querySelector('.next').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % images.length;
+      lightboxImg.src = images[currentIndex].src;
+    });
+    lightbox.querySelector('.prev').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      lightboxImg.src = images[currentIndex].src;
+    });
+
+    // إغلاق عند الضغط في الخلفية
+    lightbox.addEventListener('click', ()=>{
+      lightbox.classList.remove('show');
+    });
   </script>
 </body>
 </html>
