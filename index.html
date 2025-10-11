@@ -43,6 +43,10 @@
     border-radius:8px;
     text-decoration:none;
     font-weight:600;
+    transition:background .3s;
+  }
+  .btn:hover{
+    background:#0891b2;
   }
   .works{
     display:grid;
@@ -55,14 +59,35 @@
     overflow:hidden;
     border:1px solid #334155;
     transition:.3s;
+    cursor:pointer;
   }
   .work-item:hover{transform:scale(1.03);}
   .work-item img{
     width:100%;
     height:180px;
     object-fit:cover;
+    display:block;
   }
   .footer{text-align:center;margin:40px 0 10px;color:#94a3b8;font-size:14px;}
+
+  /* Lightbox */
+  .lightbox{
+    display:none;
+    position:fixed;
+    z-index:999;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+  }
+  .lightbox img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:12px;
+    box-shadow:0 0 25px rgba(0,0,0,0.5);
+  }
+  .lightbox.show{display:flex;}
 </style>
 </head>
 <body>
@@ -87,16 +112,35 @@
     <div class="card">
       <h3>بعض من أعمالي</h3>
       <div class="works">
-        <div class="work-item">
-          <img src="https://drive.google.com/uc?export=view&id=10Kz35yj_ZWesqS5nELz_TzCxYMiMpzkm
-" alt="عمل 1">
-        </div>
-        <div class="work-item">
-          <img src="https://i.ibb.co/BzhChdf/design2.jpg" alt="عمل 2">
-        </div>
-        <div class="work-item">
-          <img src="https://i.ibb.co/nQWTrdH/design3.jpg" alt="عمل 3">
-        </div>
+        <!-- الصور القديمة -->
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/150989889.png" alt="عمل 1"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/516060985.png" alt="عمل 2"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/897949365.jpg" alt="عمل 3"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/958474529.png" alt="عمل 4"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/676674290.jpg" alt="عمل 5"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/161186280.jpg" alt="عمل 6"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/677640302.jpg" alt="عمل 7"></div>
+
+        <!-- الصور الجديدة -->
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/445348193.jpg" alt="عمل 8"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/227917876.jpg" alt="عمل 9"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/486232761.jpg" alt="عمل 10"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/919427492.jpg" alt="عمل 11"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/313847758.jpg" alt="عمل 12"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/165424954.jpg" alt="عمل 13"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/707470323.jpg" alt="عمل 14"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/671461575.jpg" alt="عمل 15"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/501569540.jpg" alt="عمل 16"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/324125662.jpg" alt="عمل 17"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/608042838.jpg" alt="عمل 18"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/478768167.jpg" alt="عمل 19"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/844475424.jpg" alt="عمل 20"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/555208759.jpg" alt="عمل 21"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/493984826.jpg" alt="عمل 22"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/136128293.jpg" alt="عمل 23"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/588394631.png" alt="عمل 24"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/654231919.jpg" alt="عمل 25"></div>
+        <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/08/183279854.png" alt="عمل 26"></div>
       </div>
     </div>
 
@@ -107,7 +151,7 @@
     </div>
 
     <!-- التواصل -->
-    <div class="card">
+    <div class="card" style="text-align:center;">
       <h3>التواصل</h3>
       <p>واتساب: <strong>+966509067209</strong></p>
       <a class="btn" href="https://wa.me/966509067209?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%D9%83%D9%85">تواصل عبر واتساب</a>
@@ -115,5 +159,22 @@
 
     <div class="footer">© 2025 أحمد السلامي</div>
   </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <img src="" alt="صورة مكبرة">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    document.querySelectorAll('.work-item img').forEach(img=>{
+      img.addEventListener('click',()=>{
+        lightboxImg.src = img.src;
+        lightbox.classList.add('show');
+      });
+    });
+    lightbox.addEventListener('click',()=>lightbox.classList.remove('show'));
+  </script>
 </body>
 </html>
