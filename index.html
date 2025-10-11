@@ -7,119 +7,112 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
 <style>
-:root{
-  --bg:#0b1020;
-  --card:#0f1726;
-  --muted:#9aa3b2;
-  --accent:#06b6d4;
-  --glass: rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:Inter, system-ui, -apple-system, "Noto Naskh Arabic", sans-serif;
-  background:linear-gradient(180deg,var(--bg),#07101a 120%);
-  color:#e6eef8;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.5;
-}
-.wrap{max-width:1100px;margin:32px auto;padding:24px;}
-header{
-  display:flex;gap:18px;align-items:center;margin-bottom:28px;
-  background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
-  padding:18px;border-radius:12px;backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
-}
-.avatar{
-  width:88px;height:88px;border-radius:14px;overflow:hidden;flex:0 0 88px;border:2px solid rgba(255,255,255,0.04);
-}
-.avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.title h1{margin:0;font-size:20px;letter-spacing:0.2px}
-.title p{margin:4px 0 0;color:var(--muted);font-size:13px}
-section{margin:20px 0;padding:18px;background:var(--card);border-radius:12px;}
-h2{margin:0 0 12px;font-size:16px}
-p.lead{color:var(--muted);margin:0 0 8px;font-size:14px}
-.contact-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.phone{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-.wa-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#059fa7,#06b6d4);color:#021014;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600}
-.wa-float{
-  position:fixed;right:18px;bottom:18px;z-index:999;
-  display:flex;align-items:center;gap:10px;
-}
-.wa-circle{width:56px;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#05a78f,#028f74);box-shadow:0 10px 24px rgba(2,20,18,0.45);border:2px solid rgba(255,255,255,0.04)}
-.wa-circle svg{width:26px;height:26px;fill:#fff}
-footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
-@media (max-width:600px){
-  .avatar{width:72px;height:72px}
-  .wrap{padding:14px;margin:14px}
-  header{flex-direction:row;gap:12px;padding:12px}
-  .wa-float{right:12px;bottom:12px}
-}
+  :root{
+    color-scheme: dark;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --text:#e2e8f0;
+    --accent:#06b6d4;
+  }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    margin:0;
+    padding:0;
+    line-height:1.8;
+    direction:rtl;
+  }
+  .container{
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+  }
+  .card{
+    background:var(--card);
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:20px;
+  }
+  h1,h2,h3{margin-top:0;color:var(--accent);}
+  .btn{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+  }
+  .works{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:15px;
+  }
+  .work-item{
+    background:#0f172a;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid #334155;
+    transition:.3s;
+  }
+  .work-item:hover{transform:scale(1.03);}
+  .work-item img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+  }
+  .footer{text-align:center;margin:40px 0 10px;color:#94a3b8;font-size:14px;}
 </style>
 </head>
 <body>
-
-<div class="wrap">
-
-  <!-- HEADER -->
-  <header>
-    <div class="avatar">
-      <img src="https://i.ibb.co/0VWQv8F1/yourphoto.jpg" alt="صورة أحمد السلامي">
-    </div>
-    <div class="title">
-      <h1>أحمد محمد ناصر قائد السلامي</h1>
-      <p>مسوّق إلكتروني متخصص بالمتاجر الإلكترونية</p>
-      <p style="margin-top:6px;color:var(--muted);font-size:13px">صفحة شخصية — عرض أعمال وسُبل التواصل</p>
-    </div>
-  </header>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <h2>من أنا</h2>
-    <p class="lead">أنا Ahmed — مسوّق إلكتروني أعمل على بناء حملات إعلانية، تصميم إعلانات، وربط البيكسلات ومنصات المتاجر. أقدّم حلول عملية ومقاسة لرفع المبيعات وبناء براند.</p>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <h2>التواصل</h2>
-    <div class="contact-row">
-      <div class="phone">
-        <strong>واتساب:</strong> <span id="phone-visible">+966509067209</span>
+  <div class="container">
+    <!-- البطاقة الشخصية -->
+    <div class="card" style="display:flex;align-items:center;gap:15px;">
+      <img src="https://i.ibb.co/0VWQv8F1/your-photo.jpg" alt="أحمد السلامي" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+      <div>
+        <h2>أحمد محمد ناصر قائد السلامي</h2>
+        <p>مسوق إلكتروني متخصص بالمتاجر الإلكترونية</p>
+        <p>صفحة شخصية — عرض أعمال ووسائل التواصل</p>
       </div>
-      <a id="wa-link" class="wa-btn" href="#" target="_blank" rel="noopener">
-        تواصل عبر واتساب
-      </a>
-      <div style="margin-left:auto;color:var(--muted);font-size:13px">أو انسخ الرقم واتصل يدوياً</div>
     </div>
-  </section>
 
-  <footer>
-    © <span id="year"></span> أحمد السلامي
-  </footer>
-</div>
+    <!-- من أنا -->
+    <div class="card">
+      <h3>من أنا</h3>
+      <p>مسوق إلكتروني أعمل على بناء حملات إعلانية، تصميم إعلانات، وربط البكسلات ومنصات المتاجر. أقدّم حلول عملية ومقاييس دقيقة لرفع المبيعات وبناء براند احترافي.</p>
+    </div>
 
-<!-- FLOATING WHATSAPP -->
-<div class="wa-float" aria-hidden="false">
-  <a id="waFloatLink" class="wa-circle" href="#" target="_blank" rel="noopener" title="تواصل عبر واتساب">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.52 3.48A11.9 11.9 0 0 0 12 .98 11.86 11.86 0 0 0 .98 12c0 2.09.54 4.12 1.56 5.93L.12 23.4l5.63-1.5A11.86 11.86 0 0 0 12 23.02c6.58 0 11.95-5.37 11.95-11.95 0-3.19-1.24-6.19-3.43-8.59zM12 21.5c-1.82 0-3.6-.5-5.15-1.44l-.37-.22-3.34.89.88-3.26-.23-.37A9.5 9.5 0 1 1 21.5 12 9.5 9.5 0 0 1 12 21.5z"/>
-      <path d="M17.1 14.92c-.28-.14-1.66-.82-1.92-.91-.26-.1-.45-.14-.64.14-.19.28-.72.91-.88 1.1-.16.19-.32.21-.6.07-.28-.14-1.18-.44-2.25-1.39-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.58.12-.12.28-.32.42-.48.14-.16.19-.28.28-.46.09-.19.04-.35-.02-.49-.06-.14-.64-1.54-.88-2.11-.23-.55-.47-.48-.64-.49-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.35-.26.28-1 0-1.46-.42-.46-.42-1.07-1.01-1.07-1.01s-.18-.16-.21-.34c-.03-.19-.33-.27-.5-.27-.16 0-.38.02-.58.03-.2.01-.53.07-.8.35-.27.27-1.03 1.02-1.03 2.48s1.06 2.88 1.21 3.08c.15.2 2.09 3.2 5.06 4.49 3.09 1.35 3.09.9 3.64.84.55-.06 1.78-.72 2.03-1.42.25-.7.25-1.3.17-1.42-.08-.12-.29-.2-.57-.34z"/>
-    </svg>
-  </a>
-</div>
+    <!-- بعض من أعمالي -->
+    <div class="card">
+      <h3>بعض من أعمالي</h3>
+      <div class="works">
+        <div class="work-item">
+          <img src="https://drive.google.com/file/d/10Kz35yj_ZWesqS5nELz_TzCxYMiMpzkm/view?usp=drive_link" alt="عمل 1">
+        </div>
+        <div class="work-item">
+          <img src="https://i.ibb.co/BzhChdf/design2.jpg" alt="عمل 2">
+        </div>
+        <div class="work-item">
+          <img src="https://i.ibb.co/nQWTrdH/design3.jpg" alt="عمل 3">
+        </div>
+      </div>
+    </div>
 
-<script>
-const PHONE_E164 = '+966509067209';
-const WA_MESSAGE = encodeURIComponent('السلام عليكم، مهتم بخدمات التسويق — أحمد السلامي');
-const waHrefWithMsg = `https://wa.me/${PHONE_E164.replace(/\+/g,'')}?text=${WA_MESSAGE}`;
-document.getElementById('wa-link').href = waHrefWithMsg;
-document.getElementById('waFloatLink').href = waHrefWithMsg;
+    <!-- التصميم والتسويق -->
+    <div class="card">
+      <h3>التصميم والتسويق</h3>
+      <p>أمزج بين الإبداع في التصميم والتحليل التسويقي لأحقق نتائج فعلية. أؤمن أن الصورة والرسالة الصحيحة تصنع التأثير الأقوى في سلوك العميل.</p>
+    </div>
 
-document.getElementById('year').textContent = new Date().getFullYear();
-document.getElementById('phone-visible').textContent = PHONE_E164;
-</script>
+    <!-- التواصل -->
+    <div class="card">
+      <h3>التواصل</h3>
+      <p>واتساب: <strong>+966509067209</strong></p>
+      <a class="btn" href="https://wa.me/966509067209?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%D9%83%D9%85">تواصل عبر واتساب</a>
+    </div>
 
+    <div class="footer">© 2025 أحمد السلامي</div>
+  </div>
 </body>
 </html>
