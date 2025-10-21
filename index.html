@@ -57,9 +57,7 @@ h1,h2,h3{margin-top:0;color:var(--accent);}
   transition:background .3s;
 }
 .btn:hover{background:#0891b2;}
-.works{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); gap:10px;
-}
+.works{ display:grid; grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); gap:10px; }
 .work-item{
   background:#0f172a; border-radius:12px; overflow:hidden;
   border:1px solid #334155; transition:.3s; cursor:pointer;
@@ -99,27 +97,8 @@ h1,h2,h3{margin-top:0;color:var(--accent);}
     <p>أنا أحمد محمد السلامي، مصمم ومشغل طباعة بخبرة تتجاوز خمس سنوات في التصميم، الطباعة، والتسويق الإلكتروني. عملت على تنفيذ تصاميم مخصصة، تجهيز ملفات الطباعة، وضبط إعدادات الإنتاج بدقة عالية، إضافةً إلى إدارة الحملات التسويقية وتحسين أداء المتاجر الإلكترونية.</p>
   </div>
 
-  <!-- أعمال التصميم الإعلاني -->
-  <div class="card">
-    <h3>أعمال التصميم الإعلاني</h3>
-    <div class="works" id="design-works">
-      <!-- fallback اختياري: اتركه أو احذفه -->
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/150989889.png" alt="عمل 1"></div>
-      <div class="work-item"><img src="https://www2.0zz0.com/2025/10/11/07/516060985.png" alt="عمل 2"></div>
-    </div>
-  </div>
-
-  <!-- أداء الحملات الإعلانية -->
-  <div class="card">
-    <h3>أداء الحملات الإعلانية</h3>
-    <div class="works" id="campaign-works"></div>
-  </div>
-
-  <!-- الدورات والشهادات -->
-  <div class="card">
-    <h3>الدورات والشهادات</h3>
-    <div class="works" id="cert-works"></div>
-  </div>
+  <!-- هنا سنبني الأقسام ديناميكيًا -->
+  <div id="dynamic-sections"></div>
 
   <div class="card" style="text-align:center;">
     <h3>التواصل</h3>
@@ -138,72 +117,89 @@ h1,h2,h3{margin-top:0;color:var(--accent);}
   <button class="next">&#10095;</button>
 </div>
 
-<!-- سكربت قراءة LocalStorage + تفعيل اللايت بوكس -->
+<!-- بناء الأقسام من LocalStorage + لايت بوكس -->
 <script>
 (function(){
   const STORE_KEY = 'als_portfolio_v1';
+  const pretty = {
+    designs: 'أعمال التصميم الإعلاني',
+    campaigns: 'أداء الحملات الإعلانية',
+    certs: 'الدورات والشهادات'
+  };
 
   function readStore(){
     try{
       const raw = localStorage.getItem(STORE_KEY);
       if(!raw) return null;
       const d = JSON.parse(raw);
-      if(!('designs' in d && 'campaigns' in d && 'certs' in d)) return null;
-      return d;
+      if(d.sections) return d;
+      // ترحيل بنية قديمة إلى الجديدة (قراءة فقط)
+      return { sections: {
+        designs: d.designs || [],
+        campaigns: d.campaigns || [],
+        certs: d.certs || []
+      }};
     }catch(e){ return null; }
   }
 
-  function buildGrid(items, container, linkable){
-    if(!container) return;
-    if(!items || !items.length) return; // لو ما فيه بيانات، نترك fallback كما هو
-    container.innerHTML = '';
+  function makeSectionCard(title){
+    const card = document.createElement('div');
+    card.className = 'card';
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    const grid = document.createElement('div');
+    grid.className = 'works';
+    card.appendChild(h3);
+    card.appendChild(grid);
+    return { card, grid };
+  }
+
+  function addItemsToGrid(items, grid, linkable=false){
     items.forEach((it,i)=>{
       const wrap = document.createElement('div');
       wrap.className = 'work-item';
       const img = document.createElement('img');
-      img.src = it.img;
-      img.alt = it.caption || ('عنصر '+(i+1));
+      img.src = it.img; img.alt = it.caption || ('عنصر '+(i+1));
       if(linkable && it.link){
         const a = document.createElement('a');
-        a.href = it.link; a.target = '_blank'; a.rel='noopener';
-        a.appendChild(img);
-        wrap.appendChild(a);
+        a.href = it.link; a.target = '_blank'; a.rel = 'noopener';
+        a.appendChild(img); wrap.appendChild(a);
       }else{
         wrap.appendChild(img);
       }
-      container.appendChild(wrap);
+      grid.appendChild(wrap);
     });
   }
 
   function initLightbox(){
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = lightbox.querySelector('img');
-    // كل صور العناصر باستثناء اللي بداخل رابط (شهادات)
     const imgs = Array.from(document.querySelectorAll('.work-item img'))
       .filter(img => !(img.parentElement && img.parentElement.tagName.toLowerCase()==='a'));
     if(!imgs.length) return;
-
     let idx = 0;
     imgs.forEach((img,i)=>{
       img.addEventListener('click', ()=>{
-        idx = i;
-        lightboxImg.src = imgs[idx].src;
-        lightbox.classList.add('show');
+        idx = i; lightboxImg.src = imgs[idx].src; lightbox.classList.add('show');
       });
     });
-
     lightbox.querySelector('.next').onclick = (e)=>{ e.stopPropagation(); idx=(idx+1)%imgs.length; lightboxImg.src=imgs[idx].src; };
     lightbox.querySelector('.prev').onclick = (e)=>{ e.stopPropagation(); idx=(idx-1+imgs.length)%imgs.length; lightboxImg.src=imgs[idx].src; };
     lightbox.onclick = ()=> lightbox.classList.remove('show');
   }
 
-  // ابني من المخزن لو موجود
   const data = readStore();
-  buildGrid(data && data.designs, document.getElementById('design-works'), false);
-  buildGrid(data && data.campaigns, document.getElementById('campaign-works'), false);
-  buildGrid(data && data.certs, document.getElementById('cert-works'), true);
+  const mount = document.getElementById('dynamic-sections');
+  if(data && mount){
+    Object.entries(data.sections).forEach(([key, items])=>{
+      if(!items || !items.length) return; // تجاهل الأقسام الفارغة
+      const title = pretty[key] || key.replace(/_/g,' ');
+      const { card, grid } = makeSectionCard(title);
+      addItemsToGrid(items, grid, key==='certs');
+      mount.appendChild(card);
+    });
+  }
 
-  // فعّل اللايت بوكس بعد أي بناء
   initLightbox();
 })();
 </script>
