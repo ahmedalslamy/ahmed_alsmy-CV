@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>لوحة إدارة البورتفوليو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--accent:#06b6d4;--muted:#94a3b8;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.card{background:var(--card);padding:16px;border-radius:16px;margin-bottom:16px;border:1px solid #334155}
+h1,h2,h3{color:var(--accent);margin:0 0 10px}
+label{display:block;margin:8px 0 4px}
+input,select,textarea{width:100%;padding:10px;background:#0b1320;color:var(--text);border:1px solid #334155;border-radius:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;margin-top:10px}
+.btn.secondary{background:#334155}
+.btn.danger{background:#dc2626}
+small{color:var(--muted)}
+.list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.item{border:1px solid #334155;border-radius:12px;overflow:hidden}
+.item img{width:100%;height:140px;object-fit:cover;display:block}
+.item .meta{padding:10px;font-size:13px;color:var(--muted)}
+.item .actions{display:flex;gap:6px;padding:10px}
+.pin{display:flex;gap:8px;align-items:center}
+hr{border:0;border-top:1px solid #334155;margin:16px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>لوحة إدارة البورتفوليو</h1>
+
+  <div class="card">
+    <h3>أمان بسيط (ليس بديلاً عن تسجيل الدخول)</h3>
+    <div class="pin">
+      <input id="pin" type="password" placeholder="أدخل PIN بسيط (مثلاً 2025)" />
+      <button class="btn" onclick="login()">دخول</button>
+      <small>ملاحظة: هذا حماية شكلية فقط وتعمل محليًا على جهازك.</small>
+    </div>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="card">
+      <h2>إضافة عنصر</h2>
+      <div class="row">
+        <div>
+          <label>القسم</label>
+          <select id="section">
+            <option value="designs">أعمال التصميم الإعلاني</option>
+            <option value="campaigns">أداء الحملات الإعلانية</option>
+            <option value="certs">الدورات والشهادات</option>
+          </select>
+        </div>
+        <div>
+          <label>رابط الصورة (URL)</label>
+          <input id="imgUrl" type="url" placeholder="https://example.com/image.jpg" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>رابط خارجي (اختياري — للشهادات مثلاً)</label>
+          <input id="linkUrl" type="url" placeholder="https://..." />
+        </div>
+        <div>
+          <label>وصف قصير (اختياري)</label>
+          <input id="caption" type="text" placeholder="وصف مختصر" />
+        </div>
+      </div>
+      <button class="btn" onclick="addItem()">إضافة</button>
+      <small id="msg"></small>
+    </div>
+
+    <div class="card">
+      <h2>القائمة الحالية</h2>
+      <div>
+        <label>اختر القسم لعرض القائمة</label>
+        <select id="viewSection" onchange="renderList()">
+          <option value="designs">أعمال التصميم الإعلاني</option>
+          <option value="campaigns">أداء الحملات الإعلانية</option>
+          <option value="certs">الدورات والشهادات</option>
+        </select>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+
+    <div class="card">
+      <h2>نسخ احتياطي</h2>
+      <div class="row">
+        <div>
+          <label>تصدير البيانات</label>
+          <button class="btn secondary" onclick="exportData()">تنزيل JSON</button>
+        </div>
+        <div>
+          <label>استيراد البيانات</label>
+          <input id="importFile" type="file" accept="application/json" />
+          <button class="btn" onclick="importData()">استيراد</button>
+        </div>
+      </div>
+      <hr>
+      <button class="btn danger" onclick="resetData()">حذف كل البيانات من المتصفح</button>
+      <small>هذا لا يحذف الصور من الإنترنت، فقط يمسح التخزين المحلي.</small>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = 'als_portfolio_v1';
+const PIN_KEY = 'als_pin_ok';
+
+function login(){
+  const pin = document.getElementById('pin').value.trim();
+  if(!pin){ alert('أدخل PIN'); return; }
+  // PIN شكلي — خزن علامة الدخول محليًا
+  localStorage.setItem(PIN_KEY, '1');
+  document.getElementById('app').style.display='block';
+}
+
+window.addEventListener('load', ()=>{
+  if(localStorage.getItem(PIN_KEY)==='1'){
+    document.getElementById('app').style.display='block';
+  }
+  ensureData();
+  renderList();
+});
+
+function ensureData(){
+  if(!localStorage.getItem(KEY)){
+    const empty = { designs:[], campaigns:[], certs:[] };
+    localStorage.setItem(KEY, JSON.stringify(empty));
+  }
+}
+
+function getData(){
+  ensureData();
+  try { return JSON.parse(localStorage.getItem(KEY)); }
+  catch(e){ return {designs:[],campaigns:[],certs:[]}; }
+}
+
+function setData(data){
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+
+function addItem(){
+  const section = document.getElementById('section').value;
+  const imgUrl = document.getElementById('imgUrl').value.trim();
+  const linkUrl = document.getElementById('linkUrl').value.trim();
+  const caption = document.getElementById('caption').value.trim();
+  const msg = document.getElementById('msg');
+  if(!imgUrl){ msg.textContent='أدخل رابط صورة صحيح.'; return; }
+
+  const data = getData();
+  const item = { img: imgUrl };
+  if(linkUrl) item.link = linkUrl;
+  if(caption) item.caption = caption;
+
+  data[section].push(item);
+  setData(data);
+
+  document.getElementById('imgUrl').value='';
+  document.getElementById('linkUrl').value='';
+  document.getElementById('caption').value='';
+  msg.textContent='تمت الإضافة.';
+  renderList();
+}
+
+function renderList(){
+  const section = document.getElementById('viewSection').value;
+  const data = getData();
+  const list = document.getElementById('list');
+  list.innerHTML='';
+
+  data[section].forEach((it,idx)=>{
+    const card = document.createElement('div');
+    card.className='item';
+    card.innerHTML = `
+      ${it.link ? `<a href="${it.link}" target="_blank">` : ``}
+      <img src="${it.img}" alt="">
+      ${it.link ? `</a>` : ``}
+      <div class="meta">${it.caption ?? ''}</div>
+      <div class="actions">
+        <button class="btn secondary" onclick="moveItem('${section}', ${idx}, -1)">↑</button>
+        <button class="btn secondary" onclick="moveItem('${section}', ${idx}, 1)">↓</button>
+        <button class="btn danger" onclick="deleteItem('${section}', ${idx})">حذف</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function moveItem(section, idx, dir){
+  const data = getData();
+  const arr = data[section];
+  const newIdx = idx + dir;
+  if(newIdx<0 || newIdx>=arr.length) return;
+  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  setData(data);
+  renderList();
+}
+
+function deleteItem(section, idx){
+  const data = getData();
+  data[section].splice(idx,1);
+  setData(data);
+  renderList();
+}
+
+function exportData(){
+  const data = getData();
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'als_portfolio_backup.json';
+  a.click();
+}
+
+function importData(){
+  const f = document.getElementById('importFile').files[0];
+  if(!f) return alert('اختر ملف JSON');
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      if(!('designs' in data && 'campaigns' in data && 'certs' in data)) throw Error('بنية غير صحيحة');
+      setData(data);
+      renderList();
+      alert('تم الاستيراد.');
+    }catch(e){ alert('ملف غير صالح.'); }
+  };
+  r.readAsText(f);
+}
+
+function resetData(){
+  if(confirm('هل أنت متأكد من حذف كل البيانات المحلية؟')){
+    localStorage.removeItem(KEY);
+    ensureData();
+    renderList();
+  }
+}
+</script>
+</body>
+</html>
