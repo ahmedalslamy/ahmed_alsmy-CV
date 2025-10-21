@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--accent:#06b6d4;--muted:#94a3b8;}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+:root{--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--accent:#06b6d4;--muted:#94a3b8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .wrap{max-width:900px;margin:auto;padding:20px}
 .card{background:var(--card);padding:16px;border-radius:16px;margin-bottom:16px;border:1px solid #334155}
 h1,h2,h3{color:var(--accent);margin:0 0 10px}
@@ -26,6 +27,7 @@ small{color:var(--muted)}
 .item .actions{display:flex;gap:6px;padding:10px}
 .pin{display:flex;gap:8px;align-items:center}
 hr{border:0;border-top:1px solid #334155;margin:16px 0}
+.badge{display:inline-block;background:#0b1320;border:1px solid #334155;border-radius:8px;padding:4px 8px;margin-inline-start:8px;font-size:12px}
 </style>
 </head>
 <body>
@@ -43,7 +45,7 @@ hr{border:0;border-top:1px solid #334155;margin:16px 0}
 
   <div id="app" style="display:none">
     <div class="card">
-      <h2>إضافة عنصر</h2>
+      <h2>إضافة عنصر <span id="quota" class="badge">الحجم: —</span></h2>
       <div class="row">
         <div>
           <label>القسم</label>
@@ -54,20 +56,34 @@ hr{border:0;border-top:1px solid #334155;margin:16px 0}
           </select>
         </div>
         <div>
-          <label>رابط الصورة (URL)</label>
+          <label>رابط الصورة (اختياري إذا سترفع ملف)</label>
           <input id="imgUrl" type="url" placeholder="https://example.com/image.jpg" />
         </div>
       </div>
+
       <div class="row">
+        <div>
+          <label>رفع صورة من جهازك</label>
+          <input id="imgFile" type="file" accept="image/*" />
+          <small>نضغط الصورة تلقائيًا (WebP، أقصى عرض 1280px) لتقليل الحجم.</small>
+        </div>
         <div>
           <label>رابط خارجي (اختياري — للشهادات مثلاً)</label>
           <input id="linkUrl" type="url" placeholder="https://..." />
         </div>
+      </div>
+
+      <div class="row">
         <div>
           <label>وصف قصير (اختياري)</label>
           <input id="caption" type="text" placeholder="وصف مختصر" />
         </div>
+        <div>
+          <label>معاينة</label>
+          <img id="preview" style="width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid #334155" alt="">
+        </div>
       </div>
+
       <button class="btn" onclick="addItem()">إضافة</button>
       <small id="msg"></small>
     </div>
@@ -102,6 +118,11 @@ hr{border:0;border-top:1px solid #334155;margin:16px 0}
       <button class="btn danger" onclick="resetData()">حذف كل البيانات من المتصفح</button>
       <small>هذا لا يحذف الصور من الإنترنت، فقط يمسح التخزين المحلي.</small>
     </div>
+
+    <div class="card">
+      <h2>(اختياري لاحقًا) رفع إلى Cloudinary تلقائيًا</h2>
+      <small>إذا حبيت لاحقًا نخلي الرفع خارجي برابط ثابت بدون قيود LocalStorage — فعّل Cloudinary (free) وأعطني <b>cloud name</b> واسم <b>unsigned upload preset</b> أضيف لك الكود.</small>
+    </div>
   </div>
 </div>
 
@@ -112,9 +133,9 @@ const PIN_KEY = 'als_pin_ok';
 function login(){
   const pin = document.getElementById('pin').value.trim();
   if(!pin){ alert('أدخل PIN'); return; }
-  // PIN شكلي — خزن علامة الدخول محليًا
   localStorage.setItem(PIN_KEY, '1');
   document.getElementById('app').style.display='block';
+  updateQuota();
 }
 
 window.addEventListener('load', ()=>{
@@ -123,6 +144,15 @@ window.addEventListener('load', ()=>{
   }
   ensureData();
   renderList();
+  updateQuota();
+});
+
+// معاينة فورية للصورة المختارة
+document.getElementById('imgFile').addEventListener('change', async (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const dataUrl = await fileToDataURL(f, 1280, 0.82);
+  document.getElementById('preview').src = dataUrl;
 });
 
 function ensureData(){
@@ -131,36 +161,74 @@ function ensureData(){
     localStorage.setItem(KEY, JSON.stringify(empty));
   }
 }
-
 function getData(){
   ensureData();
   try { return JSON.parse(localStorage.getItem(KEY)); }
   catch(e){ return {designs:[],campaigns:[],certs:[]}; }
 }
-
 function setData(data){
   localStorage.setItem(KEY, JSON.stringify(data));
+  updateQuota();
 }
 
-function addItem(){
+function approxBytesUsed(){
+  try{
+    const s = localStorage.getItem(KEY) || '';
+    return new Blob([s]).size; // تقريب
+  }catch(e){ return 0; }
+}
+function formatBytes(b){
+  if(b < 1024) return b+' B';
+  if(b < 1024*1024) return (b/1024).toFixed(1)+' KB';
+  return (b/1024/1024).toFixed(2)+' MB';
+}
+function updateQuota(){
+  const el = document.getElementById('quota');
+  if(!el) return;
+  const used = approxBytesUsed();
+  el.textContent = 'الحجم: ' + formatBytes(used) + ' (حد متصفّح تقريبي ~5–10MB)';
+  if(used > 4.5*1024*1024){ el.style.background='#7c2d12'; el.title='قارب الامتلاء—فكّر في Cloudinary أو حذف صور كبيرة'; }
+}
+
+async function addItem(){
   const section = document.getElementById('section').value;
   const imgUrl = document.getElementById('imgUrl').value.trim();
   const linkUrl = document.getElementById('linkUrl').value.trim();
   const caption = document.getElementById('caption').value.trim();
+  const file = document.getElementById('imgFile').files[0];
   const msg = document.getElementById('msg');
-  if(!imgUrl){ msg.textContent='أدخل رابط صورة صحيح.'; return; }
+
+  let finalImg = '';
+  try{
+    if(file){
+      // حوّل للصيغة الأمثل وخفّض الحجم
+      finalImg = await fileToDataURL(file, 1280, 0.82);
+      // لو ما زال كبير جدًا (> 700KB) جرّب ضغط إضافي
+      if(sizeOfDataURL(finalImg) > 700*1024){
+        finalImg = await fileToDataURL(file, 1080, 0.78);
+      }
+    }else if(imgUrl){
+      finalImg = imgUrl;
+    }else{
+      msg.textContent='حمّل صورة أو أدخل رابط صورة.'; return;
+    }
+  }catch(e){
+    msg.textContent='تعذّر معالجة الصورة. جرّب صورة أصغر.'; return;
+  }
 
   const data = getData();
-  const item = { img: imgUrl };
+  const item = { img: finalImg };
   if(linkUrl) item.link = linkUrl;
   if(caption) item.caption = caption;
-
   data[section].push(item);
   setData(data);
 
+  // تنظيف الحقول
   document.getElementById('imgUrl').value='';
   document.getElementById('linkUrl').value='';
   document.getElementById('caption').value='';
+  document.getElementById('imgFile').value='';
+  document.getElementById('preview').src='';
   msg.textContent='تمت الإضافة.';
   renderList();
 }
@@ -175,9 +243,9 @@ function renderList(){
     const card = document.createElement('div');
     card.className='item';
     card.innerHTML = `
-      ${it.link ? `<a href="${it.link}" target="_blank">` : ``}
+      ${(it.link ? `<a href="${it.link}" target="_blank">` : ``)}
       <img src="${it.img}" alt="">
-      ${it.link ? `</a>` : ``}
+      ${(it.link ? `</a>` : ``)}
       <div class="meta">${it.caption ?? ''}</div>
       <div class="actions">
         <button class="btn secondary" onclick="moveItem('${section}', ${idx}, -1)">↑</button>
@@ -188,22 +256,18 @@ function renderList(){
     list.appendChild(card);
   });
 }
-
 function moveItem(section, idx, dir){
   const data = getData();
   const arr = data[section];
   const newIdx = idx + dir;
   if(newIdx<0 || newIdx>=arr.length) return;
   [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
-  setData(data);
-  renderList();
+  setData(data); renderList();
 }
-
 function deleteItem(section, idx){
   const data = getData();
   data[section].splice(idx,1);
-  setData(data);
-  renderList();
+  setData(data); renderList();
 }
 
 function exportData(){
@@ -214,7 +278,6 @@ function exportData(){
   a.download = 'als_portfolio_backup.json';
   a.click();
 }
-
 function importData(){
   const f = document.getElementById('importFile').files[0];
   if(!f) return alert('اختر ملف JSON');
@@ -223,20 +286,52 @@ function importData(){
     try{
       const data = JSON.parse(r.result);
       if(!('designs' in data && 'campaigns' in data && 'certs' in data)) throw Error('بنية غير صحيحة');
-      setData(data);
-      renderList();
+      setData(data); renderList(); updateQuota();
       alert('تم الاستيراد.');
     }catch(e){ alert('ملف غير صالح.'); }
   };
   r.readAsText(f);
 }
-
 function resetData(){
   if(confirm('هل أنت متأكد من حذف كل البيانات المحلية؟')){
-    localStorage.removeItem(KEY);
-    ensureData();
-    renderList();
+    localStorage.removeItem(KEY); ensureData(); renderList(); updateQuota();
   }
+}
+
+// ===== أدوات صور =====
+function sizeOfDataURL(dataUrl){
+  // تقدير حجم البايت للصورة (Base64)
+  const head = 'base64,';
+  const i = dataUrl.indexOf(head);
+  if(i === -1) return 0;
+  const b64 = dataUrl.slice(i + head.length);
+  // كل 4 حروف Base64 ≈ 3 بايت
+  return Math.floor((b64.length * 3) / 4);
+}
+function loadImage(file){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.onload = ()=> resolve(img);
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+async function fileToDataURL(file, maxW=1280, quality=0.82){
+  const img = await loadImage(file);
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  const ratio = img.width / img.height;
+  const w = Math.min(maxW, img.width);
+  const h = Math.round(w / ratio);
+
+  canvas.width = w; canvas.height = h;
+  ctx.drawImage(img, 0, 0, w, h);
+
+  // WebP لو غير مدعوم يرجع JPEG تلقائيًا
+  const mime = 'image/webp';
+  const dataUrl = canvas.toDataURL(mime, quality);
+  return dataUrl;
 }
 </script>
 </body>
